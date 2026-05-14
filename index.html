@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOLF LABS | Cozy Wardrobe HW (A1)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zen: {
+                            bg: '#1c1917',       
+                            panel: '#292524',    
+                            panelHover: '#44403c',
+                            text: '#f5f5f4',     
+                            muted: '#a8a29e',    
+                            sage: '#95b89d',     
+                            terra: '#e07a5f',    
+                            mustard: '#d4a373'   
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Lora', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --tw-colors-zen-bg: #1c1917;
+            --tw-colors-zen-panel: #292524;
+            --tw-colors-zen-panelHover: #44403c;
+            --tw-colors-zen-text: #f5f5f4;
+            --tw-colors-zen-muted: #a8a29e;
+            --tw-colors-zen-sage: #95b89d;
+            --tw-colors-zen-terra: #e07a5f;
+            --tw-colors-zen-mustard: #d4a373;
+        }
+
+        body { background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Nunito', sans-serif; overflow: hidden; }
+        #phone-frame { width: 375px; height: 812px; background: var(--tw-colors-zen-bg); border-radius: 40px; border: 12px solid #1a1a1a; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(224, 122, 95, 0.1); max-height: 100vh;}
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 30px; background: #1a1a1a; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 50; }
+        
+        /* GENTLE AMBIENT LIGHTING */
+        .zen-ambient {
+            position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(circle at 10% 10%, rgba(224, 122, 95, 0.1) 0%, transparent 60%),
+                        radial-gradient(circle at 90% 90%, rgba(132, 169, 140, 0.1) 0%, transparent 60%);
+        }
+
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+        
+        /* Confetti */
+        .confetti { position: absolute; width: 8px; height: 16px; opacity: 0; z-index: 60; border-radius: 4px; }
+        @keyframes fall { 0% { opacity: 1; transform: translateY(-50px) rotate(0deg); } 100% { opacity: 0; transform: translateY(800px) rotate(720deg); } }
+        
+        .hide-scroll::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="phone-frame">
+        <div class="zen-ambient"></div>
+        <div class="notch"></div>
+        
+        <!-- UI Header -->
+        <header class="pt-12 pb-4 px-6 bg-[var(--tw-colors-zen-panel)]/80 border-b border-white/5 flex justify-between items-center z-40 relative backdrop-blur-md shadow-sm">
+            <div class="font-heading font-bold text-zen-text text-lg tracking-widest uppercase">WOLF<span class="text-zen-terra">HW</span></div>
+            <div class="text-[10px] font-mono font-bold text-zen-muted bg-zen-panelHover/50 px-2 py-1 rounded border border-white/5" id="q-counter">Q 01/15</div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="h-1 bg-zen-panelHover w-full relative z-40">
+            <div id="progress-bar" class="h-full bg-zen-terra transition-all duration-500 shadow-[0_0_10px_rgba(224,122,95,0.5)]" style="width: 0%"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main id="app-content" class="p-6 h-[calc(100%-100px)] overflow-y-auto relative text-zen-text z-20 hide-scroll flex flex-col">
+            
+            <!-- Start Screen -->
+            <div id="screen-start" class="flex flex-col items-center justify-center flex-grow text-center fade-in">
+                <div class="w-28 h-28 bg-zen-panel rounded-full flex items-center justify-center border border-white/5 mb-6 shadow-lg relative overflow-hidden">
+                    <i class="fas fa-leaf text-5xl text-zen-mustard opacity-20 absolute -top-2 -right-2 transform rotate-45"></i>
+                    <i class="fas fa-mug-hot text-5xl text-zen-terra drop-shadow-md"></i>
+                </div>
+                <p class="text-[10px] font-bold text-zen-terra uppercase tracking-[0.3em] font-mono bg-zen-terra/10 border border-zen-terra/20 px-3 py-1 rounded-full mb-4">Route 04 Module</p>
+                <h1 class="font-heading text-4xl font-normal mb-2 tracking-wide leading-none text-zen-text">The Cozy<br><span class="italic text-zen-terra">Wardrobe</span></h1>
+                <p class="text-zen-muted mb-10 text-sm font-sans mt-4 leading-relaxed">Test your skills on Clothes, Colors,<br>and Adjective Order.</p>
+                <button onclick="startQuiz()" class="bg-zen-terra text-white w-full py-4 rounded-full font-bold font-sans tracking-widest uppercase text-sm shadow-[0_10px_20px_rgba(224,122,95,0.3)] hover:bg-[#d3694f] transition-all">Begin Styling</button>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="screen-quiz" class="hidden flex-col h-full fade-in pt-4">
+                <div class="flex-1 flex flex-col justify-center">
+                    <div class="bg-zen-panel border border-white/5 p-8 rounded-3xl relative mb-8 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-zen-terra opacity-20 rounded-t-3xl"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-[10px] text-zen-muted font-mono tracking-widest uppercase"><i class="fas fa-tshirt text-zen-mustard mr-1"></i> Style Request</p>
+                        </div>
+                        <p id="question-text" class="font-sans text-2xl font-medium text-center leading-snug tracking-wide mt-2 mb-2 text-stone-200"></p>
+                    </div>
+                    
+                    <div id="options-container" class="flex flex-col gap-4">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="screen-result" class="hidden flex-col items-center justify-center h-full text-center fade-in z-10 relative">
+                <div class="w-32 h-32 bg-zen-panel rounded-full border-4 border-zen-sage flex items-center justify-center mb-6 shadow-[0_10px_40px_rgba(132,169,140,0.2)] relative mx-auto" id="result-circle">
+                    <div class="absolute inset-2 border border-dashed border-white/10 rounded-full"></div>
+                    <span id="final-rank" class="text-6xl font-normal text-zen-text font-heading uppercase tracking-widest">S</span>
+                </div>
+                <h2 class="font-heading text-3xl font-normal mb-2 text-zen-text tracking-wide" id="final-title">Title</h2>
+                <p class="text-zen-muted font-mono mb-8 uppercase tracking-widest text-xs">Score: <span id="final-score" class="text-zen-terra font-bold"></span></p>
+                
+                <div class="bg-zen-panel p-6 rounded-2xl w-full border border-white/5 mb-8 shadow-inner text-left">
+                    <p class="text-[10px] font-bold text-zen-terra uppercase tracking-widest mb-3 font-mono border-b border-white/10 pb-2">Stylist Reminder</p>
+                    <p class="text-sm text-zen-text leading-relaxed font-sans">
+                        <span class="text-zen-mustard font-bold">FEEL vs NEED:</span> I am cold. / I want a coat.<br><br>
+                        <span class="text-zen-terra font-bold">ADJ ORDER:</span> Size comes before color! <br><i>(A small black coat)</i>
+                    </p>
+                </div>
+                <button onclick="location.reload()" class="bg-transparent border border-zen-panelHover text-zen-text w-full py-4 rounded-full font-bold font-sans tracking-widest uppercase hover:border-zen-terra hover:text-zen-terra transition-colors text-sm">Return to Boutique</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "I _____ very cold today.", o: ["want", "am", "is"], a: 1 },
+            { q: "Bob _____ a warm coat.", o: ["wants", "am", "want"], a: 0 },
+            { q: "She wants a _____ jacket.", o: ["blue large", "large blue", "blue and large"], a: 1 },
+            { q: "I want a _____ coat, please.", o: ["small black", "black small", "small and black"], a: 0 },
+            { q: "He _____ cold. He needs a hat.", o: ["wants", "are", "is"], a: 2 },
+            { q: "The coat is £100. It is _____.", o: ["cheap", "expensive", "warm"], a: 1 },
+            { q: "We _____ a medium red bag.", o: ["wants", "are", "want"], a: 2 },
+            { q: "Look! A _____ dress.", o: ["beautiful red", "red beautiful", "beautifully red"], a: 0 },
+            { q: "Are you cold? -> Yes, I _____.", o: ["am", "is", "want"], a: 0 },
+            { q: "They want a _____ car.", o: ["black big", "big black", "big of black"], a: 1 },
+            { q: "The shirt is £5. It is very _____.", o: ["expensive", "cheap", "cold"], a: 1 },
+            { q: "Is she warm? -> No, she _____.", o: ["aren't", "don't", "isn't"], a: 2 },
+            { q: "I want _____ apple.", o: ["a red small", "a small red", "small a red"], a: 1 },
+            { q: "What do you _____ ?", o: ["want", "wants", "am"], a: 0 },
+            { q: "It is a _____ day.", o: ["cold very", "very cold", "coldly"], a: 1 }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            document.getElementById('screen-quiz').style.display = 'flex';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('q-counter').innerText = `Q ${String(currentQ + 1).padStart(2, '0')}/${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentQ) / questions.length) * 100}%`;
+            
+            const formattedQ = q.q.replace('_____', '<span class="text-zen-terra border-b-2 border-dashed border-zen-terra px-4 mx-1"></span>');
+            document.getElementById('question-text').innerHTML = formattedQ;
+            
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            
+            q.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full bg-zen-panel border border-white/5 text-left p-4 rounded-2xl text-lg hover:border-zen-terra transition-colors flex items-center font-sans group shadow-sm';
+                btn.innerHTML = `
+                    <div class="w-10 h-10 border border-white/10 bg-zen-panelHover flex items-center justify-center text-xs font-bold text-zen-muted mr-4 font-mono group-hover:border-zen-terra rounded-full shadow-inner transition-colors">${String.fromCharCode(65+idx)}</div>
+                    <span class="font-medium text-stone-300 group-hover:text-white transition-colors">${opt}</span>
+                `;
+                btn.onclick = () => handleAnswer(idx, q.a, btn, optsContainer);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selected, correct, btn, container) {
+            const buttons = Array.from(container.children);
+            buttons.forEach(b => b.disabled = true);
+            
+            if (selected === correct) {
+                btn.classList.add('bg-zen-sage/10', 'border-zen-sage');
+                btn.classList.remove('bg-zen-panel', 'border-white/5', 'hover:border-zen-terra');
+                btn.querySelector('div').style.borderColor = 'var(--tw-colors-zen-sage)';
+                btn.querySelector('div').style.color = 'var(--tw-colors-zen-sage)';
+                btn.querySelector('span').classList.add('text-zen-sage', 'font-bold');
+                score++;
+            } else {
+                btn.classList.add('bg-zen-terra/10', 'border-zen-terra', 'shake');
+                btn.classList.remove('bg-zen-panel', 'border-white/5', 'hover:border-zen-terra');
+                btn.querySelector('div').style.borderColor = 'var(--tw-colors-zen-terra)';
+                btn.querySelector('div').style.color = 'var(--tw-colors-zen-terra)';
+                btn.querySelector('span').classList.add('text-zen-terra');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('border-zen-sage', 'bg-zen-sage/10');
+                correctBtn.querySelector('div').style.borderColor = 'var(--tw-colors-zen-sage)';
+                correctBtn.querySelector('div').style.color = 'var(--tw-colors-zen-sage)';
+                correctBtn.querySelector('span').classList.add('text-zen-sage');
+            }
+
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < questions.length) {
+                    document.getElementById('screen-quiz').classList.remove('fade-in');
+                    void document.getElementById('screen-quiz').offsetWidth; 
+                    document.getElementById('screen-quiz').classList.add('fade-in');
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1400);
+        }
+
+        function showResults() {
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+            document.getElementById('screen-result').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+            
+            document.getElementById('final-score').innerText = `${String(score).padStart(2,'0')} / ${questions.length}`;
+            
+            let rank, title, color;
+            const percentage = score / questions.length;
+            
+            if (percentage >= 0.9) { 
+                rank = 'S'; 
+                title = 'CHIEF STYLIST'; 
+                color = '#84a98c'; // zen-sage
+                spawnConfetti(); 
+            } else if (percentage >= 0.7) { 
+                rank = 'A'; 
+                title = 'FASHION ADVISOR'; 
+                color = '#d4a373'; // zen-mustard
+            } else { 
+                rank = 'B'; 
+                title = 'TRAINEE'; 
+                color = '#a8a29e'; // zen-muted
+            }
+            
+            const rankEl = document.getElementById('final-rank');
+            rankEl.innerText = rank;
+            rankEl.style.color = color;
+            
+            const circle = document.getElementById('result-circle');
+            circle.style.borderColor = color;
+            circle.style.boxShadow = `0 10px 40px ${color}30`;
+
+            document.getElementById('final-title').innerText = title;
+            document.getElementById('final-title').style.color = color;
+        }
+
+        function spawnConfetti() {
+            const container = document.getElementById('screen-result');
+            const colors = ['#e07a5f', '#84a98c', '#d4a373', '#f4a261'];
+            for(let i=0; i<60; i++) {
+                let conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + '%';
+                conf.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+                conf.style.animationDelay = Math.random() * 1.5 + 's';
+                conf.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                
+                // Make some confettis rounded to look like leaves
+                if (Math.random() > 0.5) conf.style.borderRadius = '50% 0 50% 0';
+                
+                container.appendChild(conf);
+            }
+        }
+    </script>
+</body>
+</html>
